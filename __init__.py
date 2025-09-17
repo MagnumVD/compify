@@ -161,7 +161,11 @@ def create_compify_material(name, camera, footage):
     mat = bpy.data.materials.new(name)
     mat.use_nodes = True
     mat.blend_method = 'HASHED'
-    mat.shadow_method = 'HASHED'
+    if hasattr(mat, "shadow_method"):                       # Blender 2.8 – 3.6
+        mat.shadow_method = 'HASHED'
+    elif hasattr(mat, "surface_render_method"):             # Blender 4.0 +
+        # ‘DITHERED’ == hashed transparency in Eevee‑Next
+        mat.surface_render_method = 'DITHERED'
     for node in mat.node_tree.nodes:
         mat.node_tree.nodes.remove(node)
 
